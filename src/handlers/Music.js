@@ -90,7 +90,7 @@ module.exports = {
           {
             attachment: await bot.utils.getBuffer(
               "http://localhost:8192/api/v1/artwork?optimize=true&url=" +
-                track.info.thumbnail,
+                track.info.thumbnail
             ),
             contentType: "image/png",
             name: "artwork.png",
@@ -107,7 +107,9 @@ module.exports = {
               url: "attachment://artwork.png",
             },
             title: "**" + track.info.title + "**",
-            description: `${mmSs(player.position)} / ${mmSs(track.info.length)}`,
+            description: `${mmSs(player.position)} / ${mmSs(
+              track.info.length
+            )}`,
             color: parseInt("26272f", 16),
             footer: {
               text:
@@ -143,14 +145,12 @@ module.exports = {
             }
           }, 10_000);
 
-        const collector = player.msg.createMessageComponentCollector({
-          time: parseInt(track.info.length * 1.125),
-        });
+        const collector = player.msg.createMessageComponentCollector();
 
         collector.on("collect", async (i) => {
           const { error, permission, notPlaying } = bot.utils.getConditions(
             bot,
-            i,
+            i
           );
 
           if (error) return i.reply({ content: error, ephemeral: true });
@@ -218,7 +218,7 @@ module.exports = {
                 {
                   attachment: await bot.utils.getBuffer(
                     "http://localhost:8192/api/v1/artwork?zero=true&url=" +
-                      track.info.thumbnail,
+                      track.info.thumbnail
                   ),
                   name: "artwork.png",
                   contentType: "image/png",
@@ -226,12 +226,9 @@ module.exports = {
               ],
             })
             .then((m) => {
-              setTimeout(
-                () => {
-                  m.delete();
-                },
-               3600000,
-              );
+              setTimeout(() => {
+                m.delete();
+              }, 3600000);
             });
         });
       };
@@ -240,10 +237,11 @@ module.exports = {
 
     bot.riffy.on("trackEnd", (player) => {
       player.msg.delete().catch(() => {});
-    })
+    });
+
     bot.riffy.on("nodeConnect", (node) => {
       console.log(
-        yellow(`Music:`) + green(` ${node.name} `) + blue(`connected.`),
+        yellow(`Music:`) + green(` ${node.name} `) + blue(`connected.`)
       );
     });
 
@@ -252,7 +250,7 @@ module.exports = {
         yellow(`Music:`) +
           green(` ${node.name} `) +
           red(`encountered an error.\n`) +
-          error.message,
+          error.message
       );
     });
 
