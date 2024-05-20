@@ -29,6 +29,7 @@ module.exports = {
           "join",
           "disconnect",
           "lyrics",
+          "ping",
         ].includes(commandName) ||
         command.vote
       ) {

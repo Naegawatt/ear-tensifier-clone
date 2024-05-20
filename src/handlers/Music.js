@@ -238,6 +238,9 @@ module.exports = {
       player.sendEmbed(player, track);
     });
 
+    bot.riffy.on("trackEnd", (player) => {
+      player.msg.delete().catch(() => {});
+    })
     bot.riffy.on("nodeConnect", (node) => {
       console.log(
         yellow(`Music:`) + green(` ${node.name} `) + blue(`connected.`),
