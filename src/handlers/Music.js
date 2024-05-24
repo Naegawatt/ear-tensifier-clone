@@ -190,7 +190,8 @@ module.exports = {
               i.update(generateMsg(player, track));
               break;
             case "skip":
-              i.update(generateMsg(player, track));
+              //i.update(generateMsg(player, track));
+              await player.msg.delete();
               player.stop();
               collector.emit("end");
               break;
