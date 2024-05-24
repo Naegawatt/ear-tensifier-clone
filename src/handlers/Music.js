@@ -135,13 +135,31 @@ module.exports = {
           };
         };
 
+        try {
+          if (!player.nowplaying) player.nowplaying = [];
+
+          await channel.bulkDelete(player.nowplaying).catch();
+          player.nowplaying = [];
+
+          if (guildLyrics) {
+            channel.bulkDelete(guildLyrics.messages).catch();
+            guildLyrics.messages = [];
+          }
+        } catch (error) {
+          //console.log(error);
+          if (error.code !== 50013) {
+            player.nowplaying = [];
+            console.error(error);
+          }
+        }
+
         player.msg = await channel.send(generateMsg(player, track));
 
         if (!player.interval)
           player.interval = setInterval(() => {
             let p = bot.riffy.players.get(player.guildId);
             if (p && p.playing && p.msg) {
-              p.msg.edit(generateMsg(p, p.current));
+              if (p.current === track) p.msg.edit(generateMsg(p, p.current));
             }
           }, 10_000);
 
@@ -231,6 +249,15 @@ module.exports = {
               }, 3600000);
             });
         });
+
+        if (!player.nowplaying) {
+          player.nowplaying = [];
+        }
+
+        /* Store */
+        if (player.nowplaying && Array.isArray(player.nowplaying)) {
+          player.nowplaying.push(player.msg);
+        }
       };
       player.sendEmbed(player, track);
     });
