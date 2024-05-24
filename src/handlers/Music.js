@@ -140,11 +140,6 @@ module.exports = {
 
           await channel.bulkDelete(player.nowplaying).catch();
           player.nowplaying = [];
-
-          if (guildLyrics) {
-            channel.bulkDelete(guildLyrics.messages).catch();
-            guildLyrics.messages = [];
-          }
         } catch (error) {
           //console.log(error);
           if (error.code !== 50013) {
