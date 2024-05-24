@@ -138,7 +138,28 @@ module.exports = {
         try {
           if (!player.nowplaying) player.nowplaying = [];
 
-          await channel.bulkDelete(player.nowplaying).catch();
+          channel.bulkDelete(player.nowplaying).catch();
+          player.nowplaying = [];
+        } catch (error) {
+          //console.log(error);
+          if (error.code !== 50013) {
+            player.nowplaying = [];
+            console.error(error);
+          }
+        }
+
+        try {
+          if (!player.nowplaying) player.nowplaying = [];
+
+          player.nowplaying.forEach(async (msg) => {
+            await msg.delete();
+          });
+
+          player.nowplaying.forEach(async (msg) => {
+            channel.messages.fetch(msg.id).then((msg) => {
+              msg.delete();
+            });
+          });
           player.nowplaying = [];
         } catch (error) {
           //console.log(error);
@@ -149,6 +170,15 @@ module.exports = {
         }
 
         player.msg = await channel.send(generateMsg(player, track));
+
+        if (!player.nowplaying) {
+          player.nowplaying = [];
+        }
+
+        /* Store */
+        if (player.nowplaying && Array.isArray(player.nowplaying)) {
+          player.nowplaying.push(player.msg);
+        }
 
         if (!player.interval)
           player.interval = setInterval(() => {
@@ -245,15 +275,6 @@ module.exports = {
               }, 3600000);
             });
         });
-
-        if (!player.nowplaying) {
-          player.nowplaying = [];
-        }
-
-        /* Store */
-        if (player.nowplaying && Array.isArray(player.nowplaying)) {
-          player.nowplaying.push(player.msg);
-        }
       };
       player.sendEmbed(player, track);
     });
