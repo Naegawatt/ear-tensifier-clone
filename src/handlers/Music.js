@@ -19,11 +19,11 @@ module.exports = {
   execute: async (bot) => {
     const nodes = [
       {
-        host: "br-01.pobrenodes.com.br",
+        host: "node.raidenbot.xyz",
         password: process.env.PASS,
-        port: 25567,
+        port: 5500,
         secure: false,
-        name: "Listen Audio Servers",
+        name: "Ligma",
         autoResume: true,
         resumeTimeout: 240_000,
       },
